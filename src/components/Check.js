@@ -18,7 +18,7 @@ export const Check = () => {
     const RenderAccounts = () => {
         let render = accountsList.map(account => {
             return (
-                <>
+                <div class="account">
                     <h1>{account.accountName}</h1>
                     {account.wallets.map(wallet => {
                         return (
@@ -29,7 +29,7 @@ export const Check = () => {
                             </div>
                         )
                     })}
-                </>
+                </div>
             )
         })
         return render
