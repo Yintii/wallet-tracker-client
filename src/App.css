@@ -1,0 +1,24 @@
+body,
+html,
+#App {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+#home {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-evenly;
+}
+
+.option {
+  padding: 10px
+}
+
+#entry {
+  display: flex;
+  flex-flow: column nowrap;
+  width: 50vw;
+  margin: 0 auto;
+}

@@ -1,0 +1,38 @@
+export const data = [
+    {
+        name: "EdgeQA",
+        btc: "xpub",
+        doge: "xpub",
+        ltc: "xpub",
+        bsv: "xpub",
+        eth: "xpub",
+        xmr: "xpub",
+    },
+    {
+        name: "kelewallet",
+        btc: "xpub",
+        doge: "xpub",
+        ltc: "xpub",
+        bsv: "xpub",
+        eth: "xpub",
+        xmr: "xpub",
+    },
+    {
+        name: "nerd_wallet",
+        btc: "xpub",
+        doge: "xpub",
+        ltc: "xpub",
+        bsv: "xpub",
+        eth: "xpub",
+        xmr: "xpub",
+    },
+    {
+        name: "doofus",
+        btc: "xpub",
+        doge: "xpub",
+        ltc: "xpub",
+        bsv: "xpub",
+        eth: "xpub",
+        xmr: "xpub",
+    },
+]
