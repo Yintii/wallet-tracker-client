@@ -4,44 +4,49 @@ import React, { useState, useEffect } from 'react'
 
 export const Check = () => {
 
-    const [data, setData] = useState('')
+    const [accountsList, setAccountsList] = useState([])
 
-
-    async function getData() {
-        let walletData = await fetch('http://localhost:5001/api/v1/accounts/check').then(response => response.json())
-        console.log(walletData)
-        setData(walletData)
+    async function getAccounts() {
+        await fetch('http://localhost:5001/api/v1/accounts/check')
+            .then(response => response.json())
+            .then(data => {
+                setAccountsList(data.accountsList)
+            })
+            .catch(err => console.error(err))
     }
 
-    const RenderData = () => {
-        const renderedData = data.accountsList.map(account => {
+    const RenderAccounts = () => {
+        let render = accountsList.map(account => {
             return (
-                <h1>
-                    {account.accountName}
+                <>
+                    <h1>{account.accountName}</h1>
                     {account.wallets.map(wallet => {
                         return (
-                            <div style={{ backgroundColor: "green" }}>
-                                <h3>{wallet.walletName}</h3>
+                            <div class="wallet">
+                                <h4>{wallet.walletName}</h4>
                                 <h4>{wallet.walletType}</h4>
-                                <span>{wallet.walletXpub}</span>
-                                <hr />
+                                <h4>{wallet.walletXpub}</h4>
                             </div>
                         )
                     })}
-                </h1>
+                </>
             )
         })
-        return renderedData
+        return render
     }
 
+
+
     useEffect(() => {
-        getData()
-        console.log(data.accountsList[0].accountName)
+        getAccounts()
+        console.log(accountsList)
     }, [])
 
     return (
-
-        <RenderData />
-
+        <>
+            <h1>Accounts</h1>
+            <hr />
+            <RenderAccounts />
+        </>
     )
 }

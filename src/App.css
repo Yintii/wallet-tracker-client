@@ -22,3 +22,10 @@ html,
   width: 50vw;
   margin: 0 auto;
 }
+
+.wallet {
+  padding: 1em;
+  margin: 1em;
+  background-color: black;
+  color: white;
+}
