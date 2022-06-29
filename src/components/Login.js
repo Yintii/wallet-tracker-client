@@ -34,8 +34,6 @@ export const Login = () => {
 
             let data = await response.json()
 
-            console.log("DATA: ", data)
-
             localStorage.setItem("user", data.user)
 
             navigate('/')

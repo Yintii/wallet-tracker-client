@@ -8,9 +8,13 @@ html,
 
 #home {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: column nowrap;
   justify-content: space-evenly;
+  height: 70vh;
+  width: 50vw;
+  margin: auto;
 }
+
 
 .option {
   padding: 10px
