@@ -12,6 +12,7 @@ export const Add = () => {
 
     const [accountName, setAccountName] = useState('')
     const [choice, setChoice] = useState('')
+    const [idOfChoice, setIdOfChoice] = useState('')
     const [walletName, setWalletName] = useState('')
     const [xPub, setXPub] = useState('')
     const [chain, setChain] = useState('')
@@ -23,6 +24,7 @@ export const Add = () => {
         let data = await response.json()
         setAccounts(data.accountsList)
         setChoice(data.accountsList[0].accountName)
+        setIdOfChoice(data.accountsList[0]._id)
 
     }
 
@@ -42,26 +44,46 @@ export const Add = () => {
     }
     const handleAccountChange = (e) => {
         setChoice(e.target.value)
+        let item = accounts.filter(each => each.accountName === choice)
+        console.log(item)
     }
 
     const handleAccountSubmit = async () => {
-        let response = await fetch('http://localhost:5001/api/v1/accounts/add/account', {
+        try {
+            let response = await fetch('http://localhost:5001/api/v1/accounts/add/account', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    accountName: accountName
+                })
+            })
+
+            let data = await response.json()
+            console.log(data)
+        } catch (error) {
+            console.error("Could not add account")
+        }
+    }
+
+    const handleWalletSubmit = async (e) => {
+        e.preventDefault()
+        let response = await fetch('http://localhost:5001/api/v1/accounts/add/wallet', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                accountName: accountName
+                walletName: walletName,
+                walletType: chain,
+                walletXpub: xPub,
+                account_id: idOfChoice
+
             })
         })
-
         let data = await response.json()
         console.log(data)
-    }
-
-    const handleWalletSubmit = async (e) => {
-        e.preventDefault()
-        console.log(choice)
     }
 
     useEffect(() => {
