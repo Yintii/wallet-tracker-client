@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { MongoClient, ServerApiVersion } from 'mongodb'
 import { Button } from 'bootstrap-react'
-
-
+import { useNavigate } from 'react-router-dom'
+import JWT from 'jsonwebtoken'
 
 
 
 export const Add = () => {
 
+    const navigate = useNavigate()
 
 
     const [name, setName] = useState('')
@@ -30,15 +31,22 @@ export const Add = () => {
         await fetch('http://localhost:3001/add')
             .then(response => response.json())
             .then(data => console.log(data))
-        // const uri = `mongodb+srv://kele:Lennon231@cluster0.chl6t.mongodb.net/?retryWrites=true&w=majority`;
-        // const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-
-        // console.log('attempting to connect to database')
-        // await client.connect(err => {
-        //     if (err) return
-        //     console.log('connected!')
-        // })
     }
+
+    useEffect(() => {
+        const user = localStorage.getItem('user')
+        console.log(user)
+        if (user) {
+            const authedUser = JWT.decode(user)
+            if (!authedUser) {
+                localStorage.removeItem('user')
+                navigate('/login')
+            }
+        } else if (!user) {
+            localStorage.removeItem('user')
+            navigate('/login')
+        }
+    }, [])
 
     return (
         <div id="entry">

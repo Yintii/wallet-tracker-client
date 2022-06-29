@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react'
+import JWT from 'jsonwebtoken'
+import { useNavigate } from 'react-router-dom'
 // import { data } from '../testdata/testdata'
 
 
 export const Check = () => {
 
     const [accountsList, setAccountsList] = useState([])
+
+    const navigate = useNavigate()
 
     async function getAccounts() {
         await fetch('http://localhost:5001/api/v1/accounts/check')
@@ -40,6 +44,21 @@ export const Check = () => {
     useEffect(() => {
         getAccounts()
         console.log(accountsList)
+    }, [])
+
+    useEffect(() => {
+        const user = localStorage.getItem('user')
+        console.log(user)
+        if (user) {
+            const authedUser = JWT.decode(user)
+            if (!authedUser) {
+                localStorage.removeItem('user')
+                navigate('/login')
+            }
+        } else if (!user) {
+            localStorage.removeItem('user')
+            navigate('/login')
+        }
     }, [])
 
     return (
