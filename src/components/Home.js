@@ -6,11 +6,8 @@ import { Button } from 'react-bootstrap'
 export const Home = () => {
     const navigate = useNavigate()
 
-
-
     useEffect(() => {
         const user = localStorage.getItem('user')
-        console.log(user)
         if (user) {
             const authedUser = JWT.decode(user)
             if (!authedUser) {

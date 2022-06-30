@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import JWT from 'jsonwebtoken'
-import { Form, Button } from 'react-bootstrap'
+import { Form, Button, Toast, ToastContainer } from 'react-bootstrap'
 
 
 
@@ -12,20 +12,34 @@ export const Add = () => {
 
     const [accountName, setAccountName] = useState('')
     const [choice, setChoice] = useState('')
-    const [idOfChoice, setIdOfChoice] = useState('')
+    const [idOfChoice, setIdOfChoice] = useState(0)
     const [walletName, setWalletName] = useState('')
     const [xPub, setXPub] = useState('')
     const [chain, setChain] = useState('')
 
-
+    const [walletSuccess, setWalletSuccess] = useState(false)
+    const [walletFail, setWalletFail] = useState(false)
+    const [accountSuccess, setAccountSuccess] = useState(false)
+    const [accountFail, setAccountFail] = useState(false)
 
     async function getAccounts() {
         let response = await fetch('http://localhost:5001/api/v1/accounts/check')
         let data = await response.json()
-        setAccounts(data.accountsList)
-        setChoice(data.accountsList[0].accountName)
-        setIdOfChoice(data.accountsList[0]._id)
+        console.log(data)
+        if (data.accountsList.length > 0) {
+            setAccounts(data.accountsList)
+            setChoice(data.accountsList[0].accountName)
+            setIdOfChoice(data.accountsList[0]._id)
+        } else {
+            setAccounts([])
+            setChoice(0)
+            setIdOfChoice(0)
+        }
+    }
 
+    function showAccountId() {
+        console.log(idOfChoice)
+        console.log(choice)
     }
 
     const handleAccountNameChange = (e) => {
@@ -34,21 +48,18 @@ export const Add = () => {
     const handleWalletNameChange = (e) => {
         setWalletName(e.target.value)
     }
-
     const handleChainChange = (e) => {
         setChain(e.target.value)
     }
-
     const handleXPubChange = (e) => {
         setXPub(e.target.value)
     }
-    const handleAccountChange = (e) => {
+    const handleChoiceChange = (e) => {
         setChoice(e.target.value)
-        let item = accounts.filter(each => each.accountName === choice)
-        console.log(item)
     }
 
     const handleAccountSubmit = async () => {
+        //need to include an if statement to check if the account already exists
         try {
             let response = await fetch('http://localhost:5001/api/v1/accounts/add/account', {
                 method: 'POST',
@@ -62,35 +73,146 @@ export const Add = () => {
 
             let data = await response.json()
             console.log(data)
+            setAccountSuccess(true)
+            setAccountName('')
         } catch (error) {
+            setAccountFail(true)
             console.error("Could not add account")
         }
     }
 
     const handleWalletSubmit = async (e) => {
         e.preventDefault()
-        let response = await fetch('http://localhost:5001/api/v1/accounts/add/wallet', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                walletName: walletName,
-                walletType: chain,
-                walletXpub: xPub,
-                account_id: idOfChoice
-
+        try {
+            let response = await fetch('http://localhost:5001/api/v1/accounts/add/wallet', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: walletName,
+                    type: chain,
+                    xpub: xPub,
+                    account_id: idOfChoice
+                })
             })
-        })
-        let data = await response.json()
-        console.log(data)
+
+
+            let data = await response.json()
+            console.log(data)
+            setWalletSuccess(true)
+
+            setWalletName('')
+            setChain('')
+            setXPub('')
+        } catch (error) {
+            setWalletFail(true)
+            setWalletName('')
+            setChain('')
+            setXPub('')
+            console.error("Unable to sumbit new wallet: ", error.message)
+        }
     }
+
+
+    const AddAccount = () => (
+        <div className='mx-auto w-50 my-5'>
+            <h1>Add Account</h1>
+            <Form className="my-5 w-75 mx-auto">
+                <Form.Group>
+                    <Form.Label>Account Name</Form.Label>
+                    <Form.Control type="text" onChange={handleAccountNameChange} value={accountName} required />
+                    <Button
+                        variant='warning'
+                        className="mt-3"
+                        onClick={handleAccountSubmit}
+                    >
+                        Add Account
+                    </Button>
+                </Form.Group>
+            </Form>
+        </div>
+    )
+    const AddWallet = () => (
+        <>
+            <h1>Add new wallet to an existing account</h1>
+            <Form className="my-5 w-75 mx-auto" onSubmit={handleWalletSubmit}>
+                <Form.Group>
+                    <Form.Label>Account</Form.Label>
+                    <Form.Select onChange={handleChoiceChange} value={choice}>
+                        {accounts.map(account => {
+                            return (
+                                <option key={account._id}>{account.accountName}</option>
+                            )
+                        })}
+                    </Form.Select>
+                    <Form.Label>Wallet Name</Form.Label>
+                    <Form.Control type="text" placeholder='My Wallet' onChange={handleWalletNameChange} value={walletName} required />
+                    <Form.Label>Wallet Type</Form.Label>
+                    <Form.Control type="text" placeholder='Btc, Bch, Eth, Sol, etc.' onChange={handleChainChange} value={chain} required />
+                    <Form.Label>Wallet xPub</Form.Label>
+                    <Form.Control type="text" placeholder='xPub address here' onChange={handleXPubChange} value={xPub} required />
+                    <Button
+                        variant='success'
+                        className="mt-3"
+                        type="submit"
+                    >
+                        Add Wallet
+                    </Button>
+                </Form.Group>
+            </Form>
+        </>
+    )
+    const OptionButtons = () => (
+        <>
+            <Button onClick={() => navigate(-1)}>Back</Button>
+            <Button variant='danger' onClick={showAccountId}>Show Account ID</Button>
+        </>
+    )
+    const ToastMessages = () => (
+        <ToastContainer className="p-3" position="bottom-end">
+            <Toast onClose={() => setWalletSuccess(false)} show={walletSuccess} delay={5000} autohide>
+                <Toast.Header>
+                    <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
+                    <strong className="me-auto">Success!</strong>
+                </Toast.Header>
+                <Toast.Body>Wallet was added successfully</Toast.Body>
+            </Toast>
+            <Toast onClose={() => setWalletFail(false)} show={walletFail} delay={5000} autohide>
+                <Toast.Header>
+                    <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
+                    <strong className="me-auto">Fail!</strong>
+                </Toast.Header>
+                <Toast.Body>Failed to add wallet :(</Toast.Body>
+            </Toast>
+            <Toast onClose={() => setAccountSuccess(false)} show={accountSuccess} delay={5000} autohide>
+                <Toast.Header>
+                    <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
+                    <strong className="me-auto">Account Success!</strong>
+                </Toast.Header>
+                <Toast.Body>Account was added successfully</Toast.Body>
+            </Toast>
+            <Toast onClose={() => setAccountFail(false)} show={accountFail} delay={5000} autohide>
+                <Toast.Header>
+                    <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
+                    <strong className="me-auto">Account Fail!</strong>
+                </Toast.Header>
+                <Toast.Body>Failed to add account :(</Toast.Body>
+            </Toast>
+        </ToastContainer>
+    )
 
     useEffect(() => {
         getAccounts()
     }, [])
 
 
+    useEffect(() => {
+        let account = accounts.filter(account => account.accountName === choice)
+        console.log("THE FUCKING ACCOUNT ID", account[0]._id)
+        // console.log(id)
+        // setIdOfChoice(id)
+    }, [choice])
 
     useEffect(() => {
         const user = localStorage.getItem('user')
@@ -107,49 +229,11 @@ export const Add = () => {
     }, [])
 
     return (
-        <div className='mx-auto w-50 my-5'>
-            <h1>Add Account</h1>
-            <Form className="my-5 w-75 mx-auto">
-                <Form.Group>
-                    <Form.Label>Account Name</Form.Label>
-                    <Form.Control type="text" onChange={handleAccountNameChange} required />
-                    <Button
-                        variant='warning'
-                        className="mt-3"
-                        onClick={handleAccountSubmit}
-                    >
-                        Add Account
-                    </Button>
-                </Form.Group>
-            </Form>
-
-            <h1>Add new wallet to an existing account</h1>
-            <Form className="my-5 w-75 mx-auto" onSubmit={handleWalletSubmit}>
-                <Form.Group>
-                    <Form.Label>Account</Form.Label>
-                    <Form.Select onChange={handleAccountChange} value={choice}>
-                        {accounts.map(account => {
-                            return (
-                                <option key={account._id} value={account.accountName}>{account.accountName}</option>
-                            )
-                        })}
-                    </Form.Select>
-                    <Form.Label>Wallet Name</Form.Label>
-                    <Form.Control type="text" placeholder='My Wallet' onChange={handleWalletNameChange} required />
-                    <Form.Label>Wallet Type</Form.Label>
-                    <Form.Control type="text" placeholder='Btc, Bch, Eth, Sol, etc.' onChange={handleChainChange} required />
-                    <Form.Label>Wallet xPub</Form.Label>
-                    <Form.Control type="text" placeholder='xPub address here' onChange={handleXPubChange} required />
-                    <Button
-                        variant='success'
-                        className="mt-3"
-                        type="submit"
-                    >
-                        Add Wallet
-                    </Button>
-                </Form.Group>
-            </Form>
-            <Button onClick={() => navigate(-1)}>Back</Button>
-        </div >
+        <>
+            <AddAccount />
+            <AddWallet />
+            <OptionButtons />
+            <ToastMessages />
+        </>
     )
 }
