@@ -19,17 +19,41 @@ export const Check = () => {
             .catch(err => console.error(err))
     }
 
+    async function fetchBtcBalance(BtcXpub) {
+        let proxy = 'https://cors-anywhere.herokuapp.com/'
+        let url = proxy + `https://btc1.trezor.io/api/v2/xpub/${BtcXpub}`
+
+        let data = await fetch(url, {
+            method: "GET",
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+            .then(response => response.json())
+        return data
+    }
+
+    function truncate(str) {
+        return str.slice(0, 5) + "..." + str.slice(str.length - 4, str.length)
+    }
+
     const RenderAccounts = () => {
         let render = accountsList.map(account => {
             return (
-                <div class="account">
+                <div key={account._id} className="account">
                     <h1>{account.accountName}</h1>
                     {account.wallets.map(wallet => {
+                        let balance = fetchBtcBalance(wallet.walletXpub)
                         return (
-                            <div class="wallet">
-                                <h4>{wallet.walletName}</h4>
-                                <h4>{wallet.walletType}</h4>
-                                <h4>{wallet.walletXpub}</h4>
+                            <div key={wallet._id} className="wallet">
+                                <div className="wallet-left">
+                                    <h4>{wallet.walletName}</h4>
+                                    <h4>{wallet.walletType}</h4>
+                                    <h4>{truncate(wallet.walletXpub)}</h4>
+                                </div>
+                                {/* <div className="wallet-right">
+                                    <h4>{balance}</h4>
+                                </div> */}
                             </div>
                         )
                     })}

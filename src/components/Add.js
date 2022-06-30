@@ -6,7 +6,6 @@ import { Form, Button, Toast, ToastContainer } from 'react-bootstrap'
 
 
 export const Add = () => {
-
     const navigate = useNavigate()
     const [accounts, setAccounts] = useState([])
 
@@ -35,11 +34,6 @@ export const Add = () => {
             setAccounts([])
             setChoice({})
         }
-    }
-
-    function showAccountId() {
-        console.log(choice.id)
-        console.log(choice.name)
     }
 
     const handleAccountNameChange = (e) => {
@@ -120,9 +114,6 @@ export const Add = () => {
             console.error("Unable to sumbit new wallet: ", error.message)
         }
     }
-
-
-
 
     const OptionButtons = () => (
         <Button onClick={() => navigate(-1)}>Back</Button>
