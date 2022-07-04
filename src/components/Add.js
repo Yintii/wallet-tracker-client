@@ -59,7 +59,8 @@ export const Add = () => {
         })
     }
 
-    const handleAccountSubmit = async () => {
+    const handleAccountSubmit = async (e) => {
+        e.preventDefault()
         //need to include an if statement to check if the account already exists
         try {
             let response = await fetch('http://localhost:5001/api/v1/accounts/add/account', {
