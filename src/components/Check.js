@@ -6,16 +6,17 @@ import { useNavigate } from 'react-router-dom'
 export const Check = () => {
 
     const [accountsList, setAccountsList] = useState([])
-
     const navigate = useNavigate()
 
     async function getAccounts() {
+
         await fetch('http://localhost:5001/api/v1/accounts/check')
             .then(response => response.json())
             .then(data => {
                 setAccountsList(data.accountsList)
             })
             .catch(err => console.error(err))
+
     }
 
 
@@ -28,25 +29,30 @@ export const Check = () => {
     const RenderAccounts = () => {
         console.log(accountsList)
         let render = accountsList.map(account => {
-            return (
-                <div key={account._id} className="account">
-                    <h1>{account.accountName}</h1>
-                    {account.wallets.map(wallet => {
-                        return (
-                            <div key={wallet._id} className="wallet">
-                                <div className="wallet-left">
-                                    <h4>{wallet.walletName}</h4>
-                                    <h4>{wallet.walletType}</h4>
-                                    <h4>{truncate(wallet.walletXpub)}</h4>
-                                </div>
-                                {/* <div className="wallet-right">
-                                    {data}
-                                </div> */}
-                            </div>
-                        )
-                    })}
-                </div>
-            )
+
+
+
+            return (<h1>Hello</h1>)
+
+            // return (
+            //     <div key={account._id} className="account">
+            //         <h1>{account.accountName}</h1>
+            //         {account.wallets.map(wallet => {
+            //             return (
+            //                 <div key={wallet._id} className="wallet">
+            //                     <div className="wallet-left">
+            //                         <h4>{wallet.walletName}</h4>
+            //                         <h4>{wallet.walletType}</h4>
+            //                         <h4>{truncate(wallet.walletXpub)}</h4>
+            //                     </div>
+            //                     <div class="wallet-right">
+            //                         <h4>{wallet.balance}</h4>
+            //                     </div>
+            //                 </div>
+            //             )
+            //         })}
+            //     </div>
+            // )
         })
         return render
     }
@@ -55,7 +61,7 @@ export const Check = () => {
 
     useEffect(() => {
         getAccounts()
-    }, [])
+    }, [accountsList.length])
 
 
 
