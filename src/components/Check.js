@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import JWT from 'jsonwebtoken'
-import { useNavigate } from 'react-router-dom'
 
 
 export const Check = () => {
 
     const [accountsList, setAccountsList] = useState([])
-    const navigate = useNavigate()
 
     async function getAccounts() {
 
@@ -18,9 +15,6 @@ export const Check = () => {
             .catch(err => console.error(err))
 
     }
-
-
-
 
     function truncate(str) {
         return str.slice(0, 5) + "..." + str.slice(str.length - 4, str.length)
@@ -63,21 +57,6 @@ export const Check = () => {
         getAccounts()
     }, [accountsList.length])
 
-
-
-    useEffect(() => {
-        const user = localStorage.getItem('user')
-        if (user) {
-            const authedUser = JWT.decode(user)
-            if (!authedUser) {
-                localStorage.removeItem('user')
-                navigate('/login')
-            }
-        } else if (!user) {
-            localStorage.removeItem('user')
-            navigate('/login')
-        }
-    }, [])
 
     return (
         <>

@@ -157,20 +157,6 @@ export const Add = () => {
     }, [])
 
 
-    useEffect(() => {
-        const user = localStorage.getItem('user')
-        if (user) {
-            const authedUser = JWT.decode(user)
-            if (!authedUser) {
-                localStorage.removeItem('user')
-                navigate('/login')
-            }
-        } else if (!user) {
-            localStorage.removeItem('user')
-            navigate('/login')
-        }
-    }, [])
-
     return (
         <>
             <div className='mx-auto w-50 my-5'>

@@ -6,20 +6,6 @@ import { Button } from 'react-bootstrap'
 export const Home = () => {
     const navigate = useNavigate()
 
-    useEffect(() => {
-        const user = localStorage.getItem('user')
-        if (user) {
-            const authedUser = JWT.decode(user)
-            if (!authedUser) {
-                localStorage.removeItem('user')
-                navigate('/login')
-            }
-        } else if (!user) {
-            localStorage.removeItem('user')
-            navigate('/login')
-        }
-    }, [])
-
     return (
         <div id="home">
             <Button class="home-btn" variant='success' onClick={() => navigate("/add")}>Add New Account</Button>
