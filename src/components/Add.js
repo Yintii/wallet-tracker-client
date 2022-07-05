@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import JWT from 'jsonwebtoken'
 import { Form, Button, Toast, ToastContainer } from 'react-bootstrap'
+import { AddAccount } from './AddAccount'
+import { AddWallet } from './AddWallet'
 
 
 
@@ -86,7 +87,7 @@ export const Add = () => {
     const handleWalletSubmit = async (e) => {
         e.preventDefault()
         try {
-            let response = await fetch('http://localhost:5001/api/v1/accounts/add/wallet', {
+            await fetch('http://localhost:5001/api/v1/accounts/add/wallet', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -98,22 +99,14 @@ export const Add = () => {
                     account_id: choice.id
                 })
             })
-
-
-            let data = await response.json()
-            console.log(data)
             setWalletSuccess(true)
-
-            setWalletName('')
-            setChain('')
-            setXPub('')
         } catch (error) {
             setWalletFail(true)
-            setWalletName('')
-            setChain('')
-            setXPub('')
-            console.error("Unable to sumbit new wallet: ", error.message)
+            console.error("Unable to submit new wallet: ", error.message)
         }
+        setChain('')
+        setXPub('')
+        setWalletName('')
     }
 
     const OptionButtons = () => (
@@ -156,55 +149,26 @@ export const Add = () => {
         getAccounts()
     }, [])
 
-
     return (
         <>
-            <div className='mx-auto w-50 my-5'>
-                <h1>Add Account</h1>
-                <Form className="my-5 w-75 mx-auto">
-                    <Form.Group>
-                        <Form.Label>Account Name</Form.Label>
-                        <Form.Control type="text" onChange={handleAccountNameChange} value={accountName} required />
-                        <Button
-                            variant='warning'
-                            className="mt-3"
-                            onClick={handleAccountSubmit}
-                        >
-                            Add Account
-                        </Button>
-                    </Form.Group>
-                </Form>
-            </div>
-
-
-            <h1>Add new wallet to an existing account</h1>
-            <Form className="my-5 w-75 mx-auto" onSubmit={handleWalletSubmit}>
-                <Form.Group>
-                    <Form.Label>Account</Form.Label>
-                    <Form.Select onChange={handleChoiceChange} value={choice.name}>
-                        {accounts.map(account => {
-                            return (
-                                <option key={account._id}>{account.accountName}</option>
-                            )
-                        })}
-                    </Form.Select>
-                    <Form.Label>Wallet Name</Form.Label>
-                    <Form.Control type="text" placeholder='My Wallet' onChange={handleWalletNameChange} value={walletName} required />
-                    <Form.Label>Wallet Type</Form.Label>
-                    <Form.Control type="text" placeholder='Btc, Bch, Eth, Sol, etc.' onChange={handleChainChange} value={chain} required />
-                    <Form.Label>Wallet xPub</Form.Label>
-                    <Form.Control type="text" placeholder='xPub address here' onChange={handleXPubChange} value={xPub} required />
-                    <Button
-                        variant='success'
-                        className="mt-3"
-                        type="submit"
-                    >
-                        Add Wallet
-                    </Button>
-                </Form.Group>
-            </Form>
-
-
+            <AddAccount
+                accountName={accountName}
+                setAccountName={setAccountName}
+                handleAccountNameChange={handleAccountNameChange}
+                handleAccountSubmit={handleAccountSubmit}
+            />
+            <AddWallet
+                accounts={accounts}
+                walletName={walletName}
+                chain={chain}
+                xPub={xPub}
+                choice={choice}
+                handleWalletNameChange={handleWalletNameChange}
+                handleChainChange={handleChainChange}
+                handleChoiceChange={handleChoiceChange}
+                handleXPubChange={handleXPubChange}
+                handleWalletSubmit={handleWalletSubmit}
+            />
             <OptionButtons />
             <ToastMessages />
         </>

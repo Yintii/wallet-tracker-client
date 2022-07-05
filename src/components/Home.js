@@ -8,9 +8,9 @@ export const Home = () => {
 
     return (
         <div id="home">
-            <Button class="home-btn" variant='success' onClick={() => navigate("/add")}>Add New Account</Button>
-            <Button class="home-btn" variant='warning' onClick={() => navigate("/check")}>Review Accounts</Button>
-            <Button class="home-btn" variant='danger' onClick={() => navigate('/logout')}>Logout</Button>
+            <Button className="home-btn" variant='success' onClick={() => navigate("/add")}>Add New Account</Button>
+            <Button className="home-btn" variant='warning' onClick={() => navigate("/check")}>Review Accounts</Button>
+            <Button className="home-btn" variant='danger' onClick={() => navigate('/logout')}>Logout</Button>
         </div>
     )
 }
