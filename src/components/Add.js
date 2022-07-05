@@ -32,8 +32,7 @@ export const Add = () => {
                 name: data.accountsList[0].accountName
             })
         } else {
-            setAccounts([])
-            setChoice({})
+            return
         }
     }
 
@@ -145,9 +144,7 @@ export const Add = () => {
         </ToastContainer>
     )
 
-    useEffect(() => {
-        getAccounts()
-    }, [])
+
 
     return (
         <>
@@ -157,6 +154,9 @@ export const Add = () => {
                 handleAccountNameChange={handleAccountNameChange}
                 handleAccountSubmit={handleAccountSubmit}
             />
+            <Button onClick={() => getAccounts()}>
+                Get Accounts
+            </Button>
             <AddWallet
                 accounts={accounts}
                 walletName={walletName}
