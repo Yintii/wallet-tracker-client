@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Form, Button, Toast, ToastContainer } from 'react-bootstrap'
+import { Form, Button, Toast, ToastContainer, Container, Row, Col } from 'react-bootstrap'
 import { AddAccount } from './AddAccount'
 import { AddWallet } from './AddWallet'
 
@@ -147,30 +147,34 @@ export const Add = () => {
 
 
     return (
-        <>
-            <AddAccount
-                accountName={accountName}
-                setAccountName={setAccountName}
-                handleAccountNameChange={handleAccountNameChange}
-                handleAccountSubmit={handleAccountSubmit}
-            />
-            <Button onClick={() => getAccounts()}>
-                Get Accounts
-            </Button>
-            <AddWallet
-                accounts={accounts}
-                walletName={walletName}
-                chain={chain}
-                xPub={xPub}
-                choice={choice}
-                handleWalletNameChange={handleWalletNameChange}
-                handleChainChange={handleChainChange}
-                handleChoiceChange={handleChoiceChange}
-                handleXPubChange={handleXPubChange}
-                handleWalletSubmit={handleWalletSubmit}
-            />
-            <OptionButtons />
-            <ToastMessages />
-        </>
+        <Container>
+            <Row>
+                <Col className="col-sm-12">
+                    <AddAccount
+                        accountName={accountName}
+                        setAccountName={setAccountName}
+                        handleAccountNameChange={handleAccountNameChange}
+                        handleAccountSubmit={handleAccountSubmit}
+                    />
+                    <Button onClick={() => getAccounts()}>
+                        Get Accounts
+                    </Button>
+                    <AddWallet
+                        accounts={accounts}
+                        walletName={walletName}
+                        chain={chain}
+                        xPub={xPub}
+                        choice={choice}
+                        handleWalletNameChange={handleWalletNameChange}
+                        handleChainChange={handleChainChange}
+                        handleChoiceChange={handleChoiceChange}
+                        handleXPubChange={handleXPubChange}
+                        handleWalletSubmit={handleWalletSubmit}
+                    />
+                    <OptionButtons />
+                    <ToastMessages />
+                </Col>
+            </Row>
+        </Container>
     )
 }

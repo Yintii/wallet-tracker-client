@@ -27,17 +27,15 @@ html,
   margin: 0 auto;
 }
 
+.account {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
 .wallet {
   padding: 1em;
   margin: 1em;
-  background-color: black;
-  color: white;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.account {
-  padding: 1em
+  background-color: #f6e58d;
+  width: 25vw;
+  border-radius: 25px;
 }

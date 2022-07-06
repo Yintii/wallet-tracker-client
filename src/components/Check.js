@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Row, Col, Button, ListGroup, Card } from 'react-bootstrap'
+import { Container, Row, Col, Button, ListGroup, Card, Accordion } from 'react-bootstrap'
 
 export const Check = () => {
 
     const [accountsList, setAccountsList] = useState([])
 
     function truncate(str) {
-        return str.slice(0, 5) + "..." + str.slice(str.length - 4, str.length)
+        return str.slice(0, 6) + "..." + str.slice(str.length - 4, str.length)
     }
 
     const FetchBtn = () => {
@@ -26,43 +26,45 @@ export const Check = () => {
     }
 
     const RenderAccounts = () => {
-
         console.log(accountsList)
-        let render = accountsList.map(account => {
-            return (
-                <div key={account._id}>
-                    <h2>{account.accountName}</h2>
-
-                    {account.wallets.map(wallet => {
-                        return (
-                            <Card>
-                                <Card.Body key={wallet._id}>
-                                    <Card.Header>{wallet.walletName} - {wallet.walletType}</Card.Header>
-                                    <Card.Text>xPub: {truncate(wallet.walletXpub)}</Card.Text>
-                                </Card.Body>
-                            </Card>
-                        )
-                    })}
-
-                </div>
-            )
-        })
-
         return (
-            <Col className="col-sm-12" >
+            <>
                 <h1>Accounts</h1>
                 <hr />
                 <FetchBtn />
-                {render}
-            </Col >
+
+                {accountsList.map(account => {
+                    return (
+                        <Row key={account._id} className="p-2 my-4">
+                            <h1>{account.accountName}</h1>
+                            {account.wallets.map(wallet => {
+                                return (
+                                    <Col key={wallet._id} className="wallet col-sm-4">
+                                        <div className='wallet-left'>
+                                            <h3>{wallet.walletName}</h3>
+                                            <h4>{wallet.walletType}</h4>
+                                            <div className='text-muted'>{truncate(wallet.walletXpub)}</div>
+                                        </div>
+                                        <div className='wallet-right'>
+                                            {wallet.balance}
+                                        </div>
+                                    </Col>
+                                )
+                            })}
+                        </Row>
+                    )
+                })}
+            </>
         )
     }
 
 
     return (
         <Container>
-            <Row className="mx-auto my-5">
-                <RenderAccounts />
+            <Row className="my-5">
+                <Col className='col-sm-12'>
+                    <RenderAccounts />
+                </Col>
             </Row>
         </Container>
     )

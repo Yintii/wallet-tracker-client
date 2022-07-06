@@ -5,7 +5,7 @@ export const AddAccount = ({ accountName, handleAccountNameChange, handleAccount
     return (
         <div className='mx-auto w-50 my-5'>
             <h1>Add Account</h1>
-            <Form className="my-5 w-75 mx-auto">
+            <Form>
                 <Form.Group>
                     <Form.Label>Account Name</Form.Label>
                     <Form.Control type="text" onChange={handleAccountNameChange} value={accountName} required />
