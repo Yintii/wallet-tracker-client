@@ -144,6 +144,9 @@ export const Add = () => {
         </ToastContainer>
     )
 
+    useEffect(() => {
+        getAccounts()
+    }, [accounts.length])
 
 
     return (
@@ -156,9 +159,6 @@ export const Add = () => {
                         handleAccountNameChange={handleAccountNameChange}
                         handleAccountSubmit={handleAccountSubmit}
                     />
-                    <Button onClick={() => getAccounts()}>
-                        Get Accounts
-                    </Button>
                     <AddWallet
                         accounts={accounts}
                         walletName={walletName}
